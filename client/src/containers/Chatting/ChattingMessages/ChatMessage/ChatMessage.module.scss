@@ -1,0 +1,45 @@
+.Container {
+  display: flex;
+  align-items: center;
+  a {
+    color: var(--txt-clr);
+    font-weight: 500;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.Msg {
+  box-shadow: var(--shadow);
+  max-width: 95%;
+  height: fit-content;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.Recevied {
+  margin-right: auto;
+  .Msg {
+    background-color: var(--bg-clr);
+    border-radius: 2rem 2rem 2rem 0;
+    margin-right: 1rem;
+  }
+}
+.Sent {
+  margin-left: auto;
+  flex-direction: row-reverse;
+  .Msg {
+    background-color: var(--main);
+    border-radius: 2rem 2rem 0 2rem;
+    color: var(--dark-txt-clr);
+    margin-left: 1rem;
+  }
+}
+
+.Date {
+  opacity: 0.8;
+  font-size: 1.4rem;
+}

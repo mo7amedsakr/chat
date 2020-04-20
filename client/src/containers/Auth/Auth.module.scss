@@ -1,0 +1,25 @@
+.Auth {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  p {
+    text-align: center;
+    font-size: 2rem;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+    font-size: inherit;
+    align-self: center;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    margin: 1rem;
+
+    &:hover {
+      border-bottom: 2px solid var(--line);
+    }
+  }
+  & > :not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+}
