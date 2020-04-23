@@ -19,7 +19,11 @@ app.enable('trust proxy');
 // 1) Global Middlewares
 
 // Implement CORS
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+if (process.env.NODE_ENV === 'development') {
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+} else {
+  app.use(cors({ credentials: true }));
+}
 
 app.options('*', cors());
 

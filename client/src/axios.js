@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  // baseURL: 'https://still-peak-06691.herokuapp.com',
-  baseURL: 'http://127.0.0.1:4000/api/v1',
+  baseURL:
+    process.env.NODE_ENV === 'development'
+      ? 'http://127.0.0.1:4000/api/v1'
+      : 'https://pacific-everglades-97653.herokuapp.com/api/v1',
   withCredentials: true,
 });
 
