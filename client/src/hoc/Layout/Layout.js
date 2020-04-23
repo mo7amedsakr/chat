@@ -10,18 +10,16 @@ export const Layout = (props) => {
   const { isDark, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <div className={classes.Layout}>
-      <Grid container spacing={0}>
-        <Grid item xs={2} className={classes.Right}>
-          <Users />
-          <Button className={classes.ThemeBtn} onClick={toggleTheme}>
-            {isDark ? <FaMoon /> : <FaRegMoon />} <p>Dark Mode</p>
-          </Button>
-        </Grid>
-        <Grid item xs={10}>
-          {props.children}
-        </Grid>
+    <Grid container spacing={0} style={{ overflow: 'hidden' }}>
+      <Grid item xs={2} className={classes.Right}>
+        <Users />
+        <Button className={classes.ThemeBtn} onClick={toggleTheme}>
+          {isDark ? <FaMoon /> : <FaRegMoon />} <p>Dark Mode</p>
+        </Button>
       </Grid>
-    </div>
+      <Grid item xs={10}>
+        {props.children}
+      </Grid>
+    </Grid>
   );
 };

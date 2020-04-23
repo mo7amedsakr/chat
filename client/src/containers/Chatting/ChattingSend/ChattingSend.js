@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import classes from './ChattingSend.module.scss';
 import { TextareaAutosize as Textarea } from '@material-ui/core';
 import { Button } from '../../../components/Button/Button';
@@ -11,18 +11,18 @@ export const ChattingSend = (props) => {
   const { user } = useContext(AuthContext);
   const { username } = useParams();
 
-  const [msg, setMsg] = useState('');
+  const msgRef = useRef(null);
 
   const sendMsgHandler = () => {
-    if (msg.trim() === '') {
-      return setMsg('');
+    if (msgRef.current.value.trim() === '') {
+      return (msgRef.current.value = '');
     }
     socket.emit('sendmsg', {
-      message: msg,
+      message: msgRef.current.value,
       from: user.username,
       to: username,
     });
-    setMsg('');
+    msgRef.current.value = '';
   };
 
   return (
@@ -30,8 +30,7 @@ export const ChattingSend = (props) => {
       <Textarea
         placeholder="Type a message..."
         className={classes.SendTextarea}
-        value={msg}
-        onChange={(e) => setMsg(e.target.value)}
+        ref={msgRef}
         onKeyDown={(e) => {
           if (e.keyCode === 13 && !e.shiftKey) {
             e.preventDefault();

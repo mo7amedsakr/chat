@@ -1,23 +1,22 @@
 import React, { useContext, useEffect } from 'react';
 import './App.scss';
 import { Layout } from './hoc/Layout/Layout';
+import { Container } from '@material-ui/core';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Chatting } from './containers/Chatting/Chatting';
+import ThemeContext from './context/Theme/ThemeContext';
+import AuthContext from './context/Auth/AuthContext';
 import { Login } from './containers/Auth/Login/Login';
 import { Signup } from './containers/Auth/Signup/Signup';
-import AuthContext from './context/Auth/AuthContext';
 import { useAuth } from './hooks/useAuth';
-import ThemeContext from './context/Theme/ThemeContext';
-import { useLocation } from 'react-router-dom';
 
 function App() {
-  const { user } = useContext(AuthContext);
-  const { getMe, error } = useAuth();
   const { isDark } = useContext(ThemeContext);
-  const { pathname } = useLocation();
+  const { user } = useContext(AuthContext);
+  const { getMe } = useAuth();
 
   useEffect(() => {
-    getMe(pathname);
+    getMe();
   }, [getMe]);
 
   let render = (
@@ -38,6 +37,7 @@ function App() {
         <Route path="/chat/:username">
           <Chatting />
         </Route>
+        <Redirect to="/" />
       </Switch>
     </Layout>
   );
@@ -46,13 +46,13 @@ function App() {
     render = (
       <div
         style={{
-          height: '100vh',
+          height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        {error ? (
+        <Container fixed maxWidth="sm">
           <Switch>
             <Route path="/login">
               <Login />
@@ -60,11 +60,9 @@ function App() {
             <Route path="/signup">
               <Signup />
             </Route>
-            <Redirect to="/" />
+            <Redirect to="/login" />
           </Switch>
-        ) : (
-          <h1>Loading...</h1>
-        )}
+        </Container>
       </div>
     );
   }

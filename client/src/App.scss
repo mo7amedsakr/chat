@@ -11,7 +11,10 @@ button {
 input {
   width: 100%;
 }
-
+a {
+  text-decoration: none;
+  color: inherit;
+}
 button {
   cursor: pointer;
 }
@@ -25,9 +28,7 @@ button {
 .App {
   background-color: var(--bg-clr);
   color: var(--txt-clr);
-  * {
-    // transition: none !important;
-  }
+  height: 100vh;
 }
 
 .Dark {

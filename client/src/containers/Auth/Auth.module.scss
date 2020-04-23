@@ -1,25 +1,14 @@
 .Auth {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  p {
-    text-align: center;
-    font-size: 2rem;
+  // align-items: center;
+  text-align: center;
+  & > *:not(:last-child) {
+    margin-bottom: 2.5rem;
   }
-  a {
-    text-decoration: none;
-    color: inherit;
-    font-size: inherit;
-    align-self: center;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s ease;
-    margin: 1rem;
-
-    &:hover {
-      border-bottom: 2px solid var(--line);
-    }
+  &Error {
+    color: rgb(224, 36, 94);
   }
-  & > :not(:last-child) {
-    margin-bottom: 1.5rem;
+  &Submit {
   }
 }

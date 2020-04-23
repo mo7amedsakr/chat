@@ -4,15 +4,18 @@ const Message = require('../models/messageModel');
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
+    console.log(socket.id);
     let curruntRoom;
     socket.on('loggedIn', async (user) => {
-      await User.findOneAndUpdate(
-        { username: user.username },
-        { $set: { socketId: socket.id, online: true, lastSeen: null } }
-      );
-      const onlineUsers = await User.find({});
+      if (user) {
+        await User.findOneAndUpdate(
+          { username: user.username },
+          { $set: { socketId: socket.id, online: true, lastSeen: null } }
+        );
+        const onlineUsers = await User.find({});
 
-      io.emit('userloggedin', onlineUsers);
+        io.emit('userloggedin', onlineUsers);
+      }
     });
 
     socket.on('room', async (data) => {
