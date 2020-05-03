@@ -25,6 +25,10 @@ export const useAuth = () => {
   );
 
   const sendAuthReq = async (url, data) => {
+    if (data.username && data.username.replace(/\s/g, '') === '') {
+      return setError({ message: 'Username not valid.' });
+    }
+
     if (!isEmail(data.email) || !isLength(data.password, { min: 8 })) {
       return setError({ message: 'Try again with a valid values.' });
     }
