@@ -13,9 +13,11 @@ export const Signup = () => {
   const passwordConfirm = useRef(null);
 
   const submitHanlder = () =>
-    sendAuthReq('/login', {
+    sendAuthReq('/signup', {
+      username: username.current.value,
       email: email.current.value,
       password: password.current.value,
+      passwordConfirm: passwordConfirm.current.value,
     });
 
   return (
@@ -29,9 +31,9 @@ export const Signup = () => {
       <h2>Sign up</h2>
 
       {error ? <p>{error.message}</p> : null}
-      <Input type="email" placeholder="Your Username" ref={username} />
-      <Input type="email" placeholder="Your Password" ref={email} />
+      <Input type="text" placeholder="Your Username" ref={username} />
       <Input type="email" placeholder="Your E-mail" ref={email} />
+      <Input type="password" placeholder="Your Password" ref={password} />
       <Input
         type="password"
         placeholder="Confirm Your Password"

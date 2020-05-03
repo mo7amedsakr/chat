@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './User.module.scss';
 import { Link } from 'react-router-dom';
-import pic from '../../assets/jeffrey_000.png';
+import pic from '../../assets/default.jpg';
 
 export const User = (props) => {
   return (
