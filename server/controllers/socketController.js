@@ -42,9 +42,11 @@ module.exports = (io) => {
         }
       }
 
-      socket.emit('allMsgs', room.messages);
-      socket.join(room.name);
-      currentRoomName = room.name;
+      if (room) {
+        socket.emit('allMsgs', room.messages);
+        socket.join(room.name);
+        currentRoomName = room.name;
+      }
     });
 
     socket.on('sendMsg', async ({ message, from, to }) => {
