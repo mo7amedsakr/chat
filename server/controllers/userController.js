@@ -3,7 +3,6 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getMe = (req, res, next) => {
-  console.log(req.user._id);
   req.params.id = req.user._id;
   next();
 };

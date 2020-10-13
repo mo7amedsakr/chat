@@ -1,12 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import classes from '../Auth.module.scss';
 import { Input } from '../../../components/Input/Input';
-import { useAuth } from '../../../hooks/useAuth';
 import { Button } from '../../../components/Button/Button';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../context/Auth';
+import { ErrorContext } from '../../../context/Error';
 
 export const Signup = () => {
-  const { sendAuthReq, error, isLoading } = useAuth();
+  const { sendAuthReq, authLoading: isLoading } = useContext(AuthContext);
+  const { error } = useContext(ErrorContext);
   const username = useRef(null);
   const email = useRef(null);
   const password = useRef(null);

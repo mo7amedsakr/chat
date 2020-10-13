@@ -4,7 +4,7 @@ import { Grid } from '@material-ui/core';
 import { Button } from '../../components/Button/Button';
 import { FaRegMoon, FaMoon } from 'react-icons/fa';
 import { Users } from '../../components/Users/Users';
-import ThemeContext from '../../context/Theme/ThemeContext';
+import { ThemeContext } from '../../context/Theme';
 
 export const Layout = (props) => {
   const { isDark, toggleTheme } = useContext(ThemeContext);

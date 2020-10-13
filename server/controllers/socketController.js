@@ -4,7 +4,6 @@ const Message = require('../models/messageModel');
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
-    console.log(socket.id);
     let curruntRoom;
     socket.on('loggedIn', async (user) => {
       if (user) {

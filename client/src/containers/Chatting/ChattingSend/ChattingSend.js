@@ -4,7 +4,7 @@ import { TextareaAutosize as Textarea } from '@material-ui/core';
 import { Button } from '../../../components/Button/Button';
 import { FiSend } from 'react-icons/fi';
 import { useParams } from 'react-router-dom';
-import AuthContext from '../../../context/Auth/AuthContext';
+import { AuthContext } from '../../../context/Auth';
 import { socket } from '../../../socket';
 
 export const ChattingSend = (props) => {

@@ -1,23 +1,17 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import './App.scss';
 import { Layout } from './hoc/Layout/Layout';
 import { Container } from '@material-ui/core';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { Chatting } from './containers/Chatting/Chatting';
-import ThemeContext from './context/Theme/ThemeContext';
-import AuthContext from './context/Auth/AuthContext';
+import { ThemeContext } from './context/Theme';
+import { AuthContext } from './context/Auth';
 import { Login } from './containers/Auth/Login/Login';
 import { Signup } from './containers/Auth/Signup/Signup';
-import { useAuth } from './hooks/useAuth';
 
 function App() {
   const { isDark } = useContext(ThemeContext);
-  const { user } = useContext(AuthContext);
-  const { getMe } = useAuth();
-
-  useEffect(() => {
-    getMe();
-  }, [getMe]);
+  const { user, authLoading } = useContext(AuthContext);
 
   let render = (
     <Layout>
@@ -53,15 +47,19 @@ function App() {
         }}
       >
         <Container fixed maxWidth="sm">
-          <Switch>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/signup">
-              <Signup />
-            </Route>
-            <Redirect to="/login" />
-          </Switch>
+          {authLoading ? (
+            <h1 style={{ textAlign: 'center' }}>Loading...</h1>
+          ) : (
+            <Switch>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/signup">
+                <Signup />
+              </Route>
+              <Redirect to="/login" />
+            </Switch>
+          )}
         </Container>
       </div>
     );

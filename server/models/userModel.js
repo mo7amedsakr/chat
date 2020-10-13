@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const isEmail = require('../utils/isEmail');
 
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
     unique: true,
-    required: [true, 'A user must have a username']
+    required: [true, 'A user must have a username'],
   },
 
   email: {
@@ -14,47 +14,47 @@ const userSchema = new mongoose.Schema({
     required: [true, 'A user must have an e-mail'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email']
+    validate: [isEmail, 'Please provide a valid email'],
   },
 
   photo: {
     type: String,
-    default: 'default.jpg'
+    default: 'default.jpg',
   },
 
   password: {
     type: String,
     required: [true, 'A user must have a password'],
     minlength: 8,
-    select: false
+    select: false,
   },
 
   passwordConfirm: {
     type: String,
     required: [true, 'Please confirm your password'],
     validate: {
-      validator: function(el) {
+      validator: function (el) {
         return el === this.password;
       },
-      message: 'Passwords are not the same'
-    }
+      message: 'Passwords are not the same',
+    },
   },
 
   online: {
     type: Boolean,
-    default: true
+    default: true,
   },
   socketId: String,
   lastSeen: {
-    type: Date
-  }
+    type: Date,
+  },
 });
 
 userSchema.index({ username: 1 });
 userSchema.index({ socketId: 1 });
 userSchema.index({ online: 1 });
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 12);
     this.passwordConfirm = undefined;
@@ -65,12 +65,12 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-userSchema.pre(/^find/, function(next) {
+userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
 });
 
-userSchema.methods.correctPassword = async function(
+userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
