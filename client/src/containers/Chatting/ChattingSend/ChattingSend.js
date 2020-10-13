@@ -14,15 +14,13 @@ export const ChattingSend = (props) => {
   const msgRef = useRef(null);
 
   const sendMsgHandler = () => {
-    if (msgRef.current.value.trim() === '') {
-      return (msgRef.current.value = '');
-    }
-    socket.emit('sendmsg', {
-      message: msgRef.current.value,
-      from: user.username,
-      to: username,
-    });
+    const msg = msgRef.current.value;
     msgRef.current.value = '';
+
+    if (msg.replace(/\s/g, '') === '') {
+      return;
+    }
+    socket.emit('sendMsg', { message: msg, from: user.username, to: username });
   };
 
   return (

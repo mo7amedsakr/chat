@@ -3,73 +3,64 @@ const Room = require('../models/roomModel');
 const Message = require('../models/messageModel');
 
 module.exports = (io) => {
-  io.on('connection', (socket) => {
-    let curruntRoom;
-    socket.on('loggedIn', async (user) => {
-      if (user) {
-        await User.findOneAndUpdate(
-          { username: user.username },
-          { $set: { socketId: socket.id, online: true, lastSeen: null } }
-        );
-        const onlineUsers = await User.find({});
+  const usersChanged = async () => {
+    const users = await User.find();
+    io.emit('usersChanged', users);
+  };
 
-        io.emit('userloggedin', onlineUsers);
-      }
+  io.on('connection', (socket) => {
+    let currentRoomName;
+    socket.on('loggedIn', async (user) => {
+      await User.findByIdAndUpdate(user._id, {
+        $set: { socketId: socket.id, online: true, lastSeen: null }
+      });
+      await usersChanged();
     });
 
-    socket.on('room', async (data) => {
+    socket.on('joinRoom', async ({ curUser, chatWith }) => {
+      if (currentRoomName) {
+        socket.leave(currentRoomName);
+      }
       let room = await Room.findOne({
-        name: {
-          $in: [
-            `${data.curUser}-${data.chatWith}`,
-            `${data.chatWith}-${data.curUser}`
-          ]
-        }
+        name: { $in: [`${curUser}-${chatWith}`, `${chatWith}-${curUser}`] }
       }).populate({ path: 'messages' });
 
-      if (room) {
-        socket.emit('getAllMsgs', room.messages);
-      }
-
       if (!room) {
-        const curUserId = await User.findOne({
-          username: data.curUser
-        }).select('_id');
-        const chatWithId = await User.findOne({
-          username: data.chatWith
-        }).select('_id');
+        const curUserId = await User.findOne({ username: curUser }).select(
+          '_id'
+        );
+        const chatWithId = await User.findOne({ username: chatWith }).select(
+          '_id'
+        );
+
         if (curUserId && chatWithId) {
           room = await Room.create({
-            name: `${data.curUser}-${data.chatWith}`,
-            users: [curUserId, chatWithId]
+            name: `${curUser}-${chatWith}`,
+            users: [curUserId, chatWithId],
+            messages: []
           });
         }
       }
-      // if (curruntRoom) {
-      socket.leave(curruntRoom);
-      // }
+
+      socket.emit('allMsgs', room.messages);
       socket.join(room.name);
-      curruntRoom = room.name;
+      currentRoomName = room.name;
     });
-    socket.on('sendmsg', async (msg) => {
+
+    socket.on('sendMsg', async ({ message, from, to }) => {
       const room = await Room.findOne({
         name: {
-          $in: [`${msg.from}-${msg.to}`, `${msg.to}-${msg.from}`]
+          $in: [`${from}-${to}`, `${to}-${from}`]
         }
       });
-
       if (room) {
         const createdMsg = await Message.create({
           room: room.name,
-          user: msg.from,
-          message: msg.message
+          user: from,
+          message: message
         });
-        io.in(room.name).emit('sendmsg', createdMsg);
+        io.in(room.name).emit('sendMsg', createdMsg);
       }
-    });
-
-    socket.on('typing', (data) => {
-      socket.broadcast.emit('typing', data);
     });
 
     socket.on('disconnect', async () => {
@@ -77,8 +68,7 @@ module.exports = (io) => {
         { socketId: socket.id },
         { $set: { online: false, socketId: '', lastSeen: Date.now() } }
       );
-      const onlineUsers = await User.find({});
-      io.emit('userloggedout', onlineUsers);
+      await usersChanged();
     });
   });
 };

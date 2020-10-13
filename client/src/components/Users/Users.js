@@ -7,12 +7,15 @@ export const Users = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    socket.on('userloggedin', (onlineUsers) => {
-      setUsers(onlineUsers);
+    let isMounted = true;
+    socket.on('usersChanged', (newUsers) => {
+      if (isMounted) {
+        setUsers(newUsers);
+      }
     });
-    socket.on('userloggedout', (onlineUsers) => {
-      setUsers(onlineUsers);
-    });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (

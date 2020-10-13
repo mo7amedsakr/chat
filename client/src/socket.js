@@ -5,5 +5,3 @@ export const socket = io.connect(
     ? 'http://127.0.0.1:4000'
     : 'https://p-to-p-chat.herokuapp.com'
 );
-
-export const loggedIn = (user) => socket.emit('loggedIn', user);

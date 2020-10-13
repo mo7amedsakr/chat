@@ -5,11 +5,11 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
-import { loggedIn } from '../socket';
 import axios from '../axios';
 import { useHistory } from 'react-router-dom';
 import { ErrorContext } from './Error';
 import { isEmail } from '../isEmail';
+import { socket } from '../socket';
 
 export const AuthContext = createContext({
   user: null,
@@ -17,6 +17,10 @@ export const AuthContext = createContext({
   authLoading: true,
   sendAuthReq: async () => {},
 });
+
+const emitLogin = (user) => {
+  socket.emit('loggedIn', user);
+};
 
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
@@ -30,7 +34,7 @@ export const AuthProvider = (props) => {
       const res = await axios.get('/users/me');
       const user = res.data.data;
       setUser(user);
-      loggedIn(user);
+      emitLogin(user);
       push('/');
     } catch (error) {
       push('/login');
@@ -59,7 +63,7 @@ export const AuthProvider = (props) => {
       const res = await axios.post(`/users${url}`, data);
       const user = res.data.data;
       setUser(user);
-      loggedIn(user);
+      emitLogin(user);
       push('/');
     } catch (error) {
       setError(error.response.data);
