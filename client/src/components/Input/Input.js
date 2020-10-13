@@ -9,6 +9,7 @@ export const Input = forwardRef((props, ref) => {
       className={[classes.Input, props.className].join(' ')}
       required
       ref={ref}
+      defaultValue={props.defaultValue}
     />
   );
 });

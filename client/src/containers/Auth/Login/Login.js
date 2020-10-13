@@ -28,8 +28,18 @@ export const Login = () => {
     >
       <h2>Log in</h2>
       {error ? <p className={classes.AuthError}>{error.message}</p> : null}
-      <Input type="email" placeholder="Your E-mail" ref={email} />
-      <Input type="password" placeholder="Your Password" ref={password} />
+      <Input
+        type="email"
+        placeholder="Your E-mail"
+        ref={email}
+        defaultValue="test@user.com"
+      />
+      <Input
+        type="password"
+        placeholder="Your Password"
+        ref={password}
+        defaultValue="testuser1234"
+      />
       <Button>{isLoading ? 'Loading...' : 'Submit'}</Button>
       <Link to="/signup">Create new account</Link>
     </form>
