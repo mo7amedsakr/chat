@@ -17,25 +17,18 @@ export const ChattingMessages = () => {
   }, [msgs, isLoading]);
 
   useEffect(() => {
+    setIsLoading(true);
     socket.emit('joinRoom', { curUser: user.username, chatWith: username });
   }, [user, username]);
 
   useEffect(() => {
     let isMounted = true;
-    setIsLoading(true);
     socket.on('allMsgs', (messages) => {
       if (isMounted) {
         setMsgs(messages);
         setIsLoading(false);
       }
     });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    let isMounted = true;
     socket.on('sendMsg', (newMsg) => {
       if (isMounted) {
         setMsgs((prev) => [...prev, newMsg]);
